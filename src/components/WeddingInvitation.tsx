@@ -249,42 +249,44 @@ export default function WeddingInvitation() {
         <section
           data-page="venue"
           id="venue"
-          className="story-page story-page--tall relative items-center text-center"
+          className="story-page relative items-center text-center"
         >
-          <p className="text-[10px] uppercase tracking-[0.2em] text-ink/50 sm:text-xs sm:tracking-[0.22em]">
-            Travel & stay
-          </p>
-          <h2 className="display mt-2 text-3xl text-ink sm:mt-3 sm:text-6xl">
-            Where to find us
-          </h2>
-          <p className="mt-1 text-sm text-ink/60 sm:mt-2">स्थान</p>
+          <div className="mx-auto flex w-full max-w-lg flex-col items-center">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-ink/50 sm:text-xs sm:tracking-[0.22em]">
+              Travel & stay
+            </p>
+            <h2 className="display mt-1.5 text-[1.75rem] leading-tight text-ink sm:mt-3 sm:text-6xl">
+              Where to find us
+            </h2>
+            <p className="mt-0.5 text-sm text-ink/60 sm:mt-2">स्थान</p>
 
-          <figure className="relative mx-auto mt-6 aspect-[4/5] w-full max-w-sm overflow-hidden sm:mt-8 sm:aspect-[16/10] sm:max-w-xl">
-            <Image
-              src={wedding.venueImage}
-              alt={wedding.venueName}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 640px"
-            />
-          </figure>
+            <figure className="relative mx-auto mt-3 h-36 w-full max-w-xs overflow-hidden sm:mt-8 sm:h-auto sm:aspect-[16/10] sm:max-w-xl">
+              <Image
+                src={wedding.venueImage}
+                alt={wedding.venueName}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 640px"
+              />
+            </figure>
 
-          <h3 className="display mt-5 text-2xl text-ink sm:mt-8 sm:text-4xl">
-            {wedding.venueName}
-          </h3>
-          <p className="mt-1 text-sm text-ink/65">{wedding.venueAddress}</p>
-          <p className="mt-3 max-w-md px-1 text-sm leading-relaxed text-ink/70">
-            All ceremonies unfold here — from noon colours to midnight vows.
-          </p>
-          <a
-            href={wedding.mapsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 text-xs uppercase tracking-[0.16em] transition active:scale-[0.98] sm:mt-8 sm:text-sm sm:tracking-[0.18em]"
-            style={{ backgroundColor: "#1f2420", color: "#faf7f1" }}
-          >
-            Open in Google Maps
-          </a>
+            <h3 className="display mt-3 text-xl text-ink sm:mt-8 sm:text-4xl">
+              {wedding.venueName}
+            </h3>
+            <p className="mt-0.5 text-sm text-ink/65">{wedding.venueAddress}</p>
+            <p className="mt-2 max-w-md px-1 text-xs leading-relaxed text-ink/70 sm:mt-3 sm:text-sm">
+              All ceremonies unfold here — from noon colours to midnight vows.
+            </p>
+            <a
+              href={wedding.mapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-4 inline-flex min-h-11 w-full max-w-xs items-center justify-center rounded-full px-6 py-3 text-xs uppercase tracking-[0.16em] transition active:scale-[0.98] sm:mt-8 sm:min-h-12 sm:w-auto sm:text-sm sm:tracking-[0.18em]"
+              style={{ backgroundColor: "#1f2420", color: "#faf7f1" }}
+            >
+              Open in Google Maps
+            </a>
+          </div>
           <ScrollHint />
         </section>
 
