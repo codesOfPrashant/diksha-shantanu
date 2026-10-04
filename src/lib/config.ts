@@ -2,24 +2,65 @@ export const wedding = {
   bride: "Diksha",
   groom: "Shantanu",
   monogram: "D & S",
+  coupleShort: "ShaDi",
   dateLabel: "21 – 22 November 2026",
-  dateISO: "2026-11-21T12:00:00+05:30",
+  dateISO: "2026-11-22T17:00:00+05:30",
   city: "Roorkee",
   state: "Uttarakhand",
   venueName: "Kailasha Resort",
   venueAddress: "Roorkee, Uttarakhand",
   mapsUrl: "https://maps.app.goo.gl/mBUghqVSQrX4vQpU7",
   venueImage: "/photos/web/venue.jpg",
-  blessing: "॥ श्री गणेशाय नमः ॥",
+  blessing: "ॐ श्री गणेशाय नमः",
   taglineHi: "आपकी उपस्थिति ही हमारा आशीर्वाद है",
   inviteLine:
     "With love and blessings from our families, we invite you to celebrate two days of colour, music, and vows.",
 } as const;
 
+export type FamilyMember = {
+  role: string;
+  name: string;
+};
+
+export type FamilySide = {
+  id: string;
+  label: string;
+  labelHi: string;
+  members: FamilyMember[];
+};
+
+export const families: FamilySide[] = [
+  {
+    id: "groom",
+    label: "Groom's side",
+    labelHi: "वर पक्ष",
+    members: [
+      { role: "Groom", name: "Shantanu Nigam" },
+      { role: "Mother", name: "Smt Kusum Nigam" },
+      { role: "Father", name: "Late Shri Nagendra Nigam" },
+      { role: "Brother", name: "Sarthi Nigam" },
+      { role: "Grandmother", name: "Smt Shakuntla Nigam" },
+    ],
+  },
+  {
+    id: "bride",
+    label: "Bride's side",
+    labelHi: "वधू पक्ष",
+    members: [
+      { role: "Bride", name: "Diksha" },
+      { role: "Mother", name: "Smt Rekha" },
+      { role: "Father", name: "Shri Pramod Kumar" },
+      { role: "Brother", name: "Prashant Kumar" },
+      { role: "Brother", name: "Ishank Kumar" },
+    ],
+  },
+];
+
 export type SkyPhase =
   | "dawn"
   | "noon"
   | "afternoon"
+  | "goldenhour"
   | "sunset"
   | "dusk"
   | "evening"
@@ -42,11 +83,11 @@ export const ceremonies: Ceremony[] = [
   {
     id: "haldi",
     day: "21 November",
-    time: "12:00 PM",
+    time: "1:00 PM",
     title: "Haldi",
     titleHi: "हल्दी",
     description:
-      "The celebrations begin at noon with turmeric, laughter, and golden light.",
+      "The celebrations begin at 1 PM with turmeric, laughter, and golden light.",
     dressCode: "Yellow / Haldi colour",
     sky: "noon",
     accent: "#e4b23a",
@@ -78,11 +119,11 @@ export const ceremonies: Ceremony[] = [
     id: "wedding",
     day: "22 November",
     time: "5:00 PM onwards",
-    title: "Wedding Reception",
-    titleHi: "रिसेप्शन",
+    title: "Wedding Celebration",
+    titleHi: "विवाह उत्सव",
     description:
       "As the sun hangs low, we welcome you to celebrate Diksha and Shantanu.",
-    sky: "sunset",
+    sky: "goldenhour",
     accent: "#7a6aa8",
   },
   {
@@ -151,12 +192,12 @@ export const playlist: Track[] = [
 
 export const photos = [
   {
-    src: "/photos/web/couple-1.jpg",
+    src: "/photos/web/couple-1.jpeg",
     alt: "Diksha and Shantanu together",
     caption: "Us, so far",
   },
   {
-    src: "/photos/web/couple-2.jpg",
+    src: "/photos/web/couple-2.png",
     alt: "Diksha and Shantanu portrait",
     caption: "Always us",
   },

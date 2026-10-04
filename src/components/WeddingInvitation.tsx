@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import {
   ceremonies,
+  families,
   wedding,
   type Ceremony,
   type SkyPhase,
@@ -24,6 +25,7 @@ const pageOrder = [
   "phere",
   "venue",
   "rsvp",
+  "family",
 ] as const;
 
 const pageSky: Record<(typeof pageOrder)[number], SkyPhase> = {
@@ -31,11 +33,12 @@ const pageSky: Record<(typeof pageOrder)[number], SkyPhase> = {
   haldi: "noon",
   mehendi: "afternoon",
   sangeet: "sunset",
-  wedding: "sunset",
+  wedding: "goldenhour",
   "jai-mala": "evening",
   phere: "midnight",
   venue: "after",
   rsvp: "after",
+  family: "after",
 };
 
 function ScrollHint({ light }: { light?: boolean }) {
@@ -54,7 +57,8 @@ function CeremonyPage({ ceremony }: { ceremony: Ceremony }) {
     ceremony.sky === "midnight" ||
     ceremony.sky === "evening" ||
     ceremony.sky === "dusk" ||
-    ceremony.sky === "sunset";
+    ceremony.sky === "sunset" ||
+    ceremony.sky === "goldenhour";
 
   return (
     <section
@@ -301,40 +305,31 @@ export default function WeddingInvitation() {
         >
           <div className="pointer-events-none absolute inset-0">
             <Image
-              src="/photos/web/couple-2.jpg"
+              src="/photos/web/couple-2.png"
               alt=""
               fill
               priority
-              className="object-cover object-[center_20%]"
+              className="object-cover object-center"
               sizes="100vw"
             />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,20,18,0.35)_0%,rgba(18,20,18,0.28)_40%,rgba(18,20,18,0.78)_100%)]" />
           </div>
           <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center px-1 text-paper">
-            <p className="text-[11px] tracking-[0.22em] text-paper/80 sm:text-sm sm:tracking-[0.28em]">
-              {wedding.blessing}
+            <p className="script text-3xl sm:text-4xl" aria-label={wedding.coupleShort}>
+              <span className="text-[color:var(--sha)]">Sha</span>
+              <span className="text-[color:var(--di)]">Di</span>
             </p>
-            <p className="mt-4 text-[10px] uppercase tracking-[0.3em] text-gold-soft sm:mt-5 sm:text-xs sm:tracking-[0.35em]">
-              {wedding.monogram}
-            </p>
-            <h1 className="display mt-2 flex flex-col items-center gap-0.5 text-[clamp(3rem,13vw,5.5rem)] leading-[0.92] text-paper sm:mt-3 sm:block sm:text-8xl">
-              <span>{wedding.bride}</span>
-              <span className="script text-[clamp(2.2rem,9vw,3.5rem)] text-gold-soft sm:mx-3 sm:inline sm:text-6xl">
-                &
-              </span>
-              <span>{wedding.groom}</span>
-            </h1>
-            <p className="mt-3 max-w-xl text-sm leading-relaxed text-paper/85 sm:mt-4 sm:text-lg">
-              {wedding.inviteLine}
-            </p>
-            <p className="mt-3 text-[11px] uppercase tracking-[0.16em] text-paper/70 sm:text-sm sm:tracking-[0.2em]">
+            <p className="mt-4 text-[11px] uppercase tracking-[0.18em] text-paper/80 sm:mt-5 sm:text-sm sm:tracking-[0.22em]">
               {wedding.dateLabel}
-              <span className="mt-1 block sm:mt-0 sm:inline">
+              <span className="mt-1.5 block sm:mt-0 sm:inline">
                 <span className="hidden sm:inline"> · </span>
                 {wedding.city}
               </span>
             </p>
-            <p className="mt-6 text-[10px] uppercase tracking-[0.2em] text-paper/55 sm:mt-8 sm:text-xs">
+            <p className="mt-5 max-w-xl text-sm leading-relaxed text-paper/85 sm:mt-6 sm:text-lg">
+              {wedding.inviteLine}
+            </p>
+            <p className="mt-8 text-[10px] uppercase tracking-[0.2em] text-paper/55 sm:mt-10 sm:text-xs">
               Counting down to the celebrations
             </p>
             <div className="mt-3 w-full max-w-md text-paper">
@@ -407,6 +402,46 @@ export default function WeddingInvitation() {
               </p>
             </div>
             <RSVPForm />
+          </div>
+          <ScrollHint light />
+        </section>
+
+        <section
+          data-page="family"
+          id="family"
+          className="story-page relative items-center text-center"
+        >
+          <div className="mx-auto flex w-full max-w-xl flex-col items-center text-paper">
+            <p className="text-[9px] uppercase tracking-[0.2em] text-paper/60 sm:text-[10px]">
+              With love
+            </p>
+            <h2 className="display mt-1 text-2xl leading-tight text-paper sm:mt-2 sm:text-4xl">
+              Our families
+            </h2>
+            <p className="mt-0.5 text-xs text-paper/70">परिवार</p>
+
+            <div className="mt-5 grid w-full grid-cols-2 gap-4 sm:mt-8 sm:gap-8">
+              {families.map((side) => (
+                <div key={side.id} className="min-w-0 text-center">
+                  <p className="text-[9px] uppercase tracking-[0.14em] text-gold-soft sm:text-[10px] sm:tracking-[0.18em]">
+                    {side.label}
+                  </p>
+                  <p className="mt-0.5 text-[11px] text-paper/50">{side.labelHi}</p>
+                  <ul className="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
+                    {side.members.map((member) => (
+                      <li key={`${side.id}-${member.role}-${member.name}`}>
+                        <p className="text-[8px] uppercase tracking-[0.12em] text-paper/40 sm:text-[9px]">
+                          {member.role}
+                        </p>
+                        <p className="display mt-0.5 text-sm leading-snug text-paper sm:text-base">
+                          {member.name}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 

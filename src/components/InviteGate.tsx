@@ -10,8 +10,8 @@ export default function InviteGate({ onOpen }: InviteGateProps) {
   return (
     <section className="relative flex min-h-[100dvh] min-h-[100svh] items-center justify-center overflow-hidden px-5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-[max(2.5rem,env(safe-area-inset-top))]">
       <div
-        className="absolute inset-0 bg-cover bg-[center_28%]"
-        style={{ backgroundImage: "url('/photos/web/hero.jpg')" }}
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url('/photos/web/couple-1.jpeg')" }}
         aria-hidden
       />
       <div
@@ -20,18 +20,18 @@ export default function InviteGate({ onOpen }: InviteGateProps) {
       />
 
       <div className="relative z-10 mx-auto flex w-full max-w-xl flex-col items-center px-1 text-center text-paper">
-        <p className="fade-in text-[11px] tracking-[0.22em] text-paper/80 sm:text-sm sm:tracking-[0.28em]">
+        <p className="fade-in text-[11px] tracking-normal text-paper/80 sm:text-sm">
           {wedding.blessing}
         </p>
         <p className="fade-up mt-6 text-[10px] uppercase tracking-[0.32em] text-gold-soft sm:mt-8 sm:text-xs sm:tracking-[0.35em]">
           {wedding.monogram}
         </p>
-        <h1 className="display fade-up mt-3 flex flex-col items-center gap-1 text-[clamp(2.75rem,12vw,4.5rem)] leading-[0.95] sm:mt-4 sm:block sm:text-7xl sm:leading-none">
-          <span>{wedding.bride}</span>
-          <span className="script text-[clamp(2rem,8vw,3rem)] text-gold-soft sm:mx-3 sm:inline sm:text-5xl">
+        <h1 className="display fade-up mt-3 mx-auto flex w-max max-w-full flex-col items-stretch text-center text-[clamp(2.5rem,11vw,4.5rem)] leading-none sm:mt-4 sm:block sm:w-auto sm:text-7xl">
+          <span className="block w-full text-center">{wedding.bride}</span>
+          <span className="script my-2 flex h-[1.1em] w-full items-center justify-center text-[0.72em] leading-none text-gold-soft sm:mx-3 sm:my-0 sm:inline sm:h-auto sm:w-auto sm:text-5xl">
             &
           </span>
-          <span>{wedding.groom}</span>
+          <span className="block w-full text-center">{wedding.groom}</span>
         </h1>
         <p className="fade-up mt-5 text-sm text-paper/85 sm:mt-6 sm:text-lg">
           You are invited

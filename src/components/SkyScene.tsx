@@ -4,10 +4,10 @@ import type { SkyPhase } from "@/lib/config";
 
 /**
  * End-to-end sky story (matches ceremony order):
- * dawn → noon → afternoon → sunset → dusk → evening → midnight → after
+ * dawn → noon → afternoon → goldenhour (5pm) → sunset (6pm) → dusk → evening → midnight → after
  *
  * Sun travels left→right and sets fully before night.
- * Moon stays parked below until sunset, then rises on the same left→right night arc.
+ * Moon stays parked below until dusk, then rises on the same left→right night arc.
  * No cream “day” sky after pheras — night gently softens instead.
  */
 
@@ -45,6 +45,15 @@ const skyStyles: Record<
     text: "dark",
     stars: 0,
   },
+  /** ~5 PM — sun still clear of the horizon */
+  goldenhour: {
+    gradient:
+      "linear-gradient(180deg, #5a7aa8 0%, #d4886a 38%, #f0b46a 64%, #f6d9a0 100%)",
+    ground: "linear-gradient(180deg, transparent, rgba(50, 36, 24, 0.32))",
+    text: "light",
+    stars: 0,
+  },
+  /** ~6 PM — sun lower, richer sunset */
   sunset: {
     gradient:
       "linear-gradient(180deg, #3a4c78 0%, #c26658 34%, #e89a58 60%, #f3c78a 100%)",
@@ -87,6 +96,7 @@ const moonByPhase: Record<SkyPhase, Orb> = {
   dawn: { left: "14%", top: "128%", size: "3rem", opacity: 0 },
   noon: { left: "14%", top: "128%", size: "3rem", opacity: 0 },
   afternoon: { left: "14%", top: "128%", size: "3rem", opacity: 0 },
+  goldenhour: { left: "14%", top: "128%", size: "3rem", opacity: 0 },
   sunset: { left: "14%", top: "128%", size: "3rem", opacity: 0 },
   dusk: { left: "18%", top: "72%", size: "3.1rem", opacity: 0.55 },
   evening: { left: "42%", top: "22%", size: "3.6rem", opacity: 0.95 },
@@ -120,9 +130,17 @@ const sunByPhase: Record<SkyPhase, Orb> = {
     glow: "0 0 68px rgba(255, 190, 90, 0.5)",
     fill: "radial-gradient(circle at 35% 35%, #fff4d6, #ffc978 55%, #f0a35a 100%)",
   },
+  goldenhour: {
+    left: "74%",
+    top: "48%",
+    size: "clamp(4.4rem, 17vw, 7rem)",
+    opacity: 1,
+    glow: "0 0 78px rgba(255, 170, 80, 0.55)",
+    fill: "radial-gradient(circle at 35% 35%, #fff2c8, #ffb85c 55%, #e88840 100%)",
+  },
   sunset: {
-    left: "80%",
-    top: "66%",
+    left: "84%",
+    top: "74%",
     size: "clamp(4.8rem, 19vw, 7.6rem)",
     opacity: 1,
     glow: "0 0 90px rgba(255, 120, 70, 0.55)",

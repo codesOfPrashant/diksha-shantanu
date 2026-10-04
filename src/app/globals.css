@@ -10,6 +10,9 @@
   --sage: #5f7263;
   --gold: #b8944f;
   --gold-soft: #d4b87a;
+  /* ShaDi monogram — champagne + rose on dark photo */
+  --sha: #f0d9a8;
+  --di: #e39aaa;
   --shadow: rgba(31, 36, 32, 0.18);
   --background: var(--paper);
   --foreground: var(--ink);
