@@ -38,18 +38,32 @@ const pageSky: Record<(typeof pageOrder)[number], SkyPhase> = {
   rsvp: "soft",
 };
 
-function ScrollHint({ light }: { light?: boolean }) {
+function ScrollHint({
+  light,
+  onClick,
+}: {
+  light?: boolean;
+  onClick?: () => void;
+}) {
   return (
-    <div
+    <button
+      type="button"
+      onClick={onClick}
       className={`scroll-hint ${light ? "text-paper/70" : "text-ink/45"}`}
-      aria-hidden
+      aria-label="Go to next page"
     >
       <span className="scroll-chevron text-xl leading-none">↓</span>
-    </div>
+    </button>
   );
 }
 
-function CeremonyPage({ ceremony }: { ceremony: Ceremony }) {
+function CeremonyPage({
+  ceremony,
+  onNext,
+}: {
+  ceremony: Ceremony;
+  onNext?: () => void;
+}) {
   const isNight =
     ceremony.sky === "midnight" ||
     ceremony.sky === "dusk" ||
@@ -108,7 +122,7 @@ function CeremonyPage({ ceremony }: { ceremony: Ceremony }) {
           under the stars and moon
         </p>
       )}
-      <ScrollHint light={isNight} />
+      <ScrollHint light={isNight} onClick={onNext} />
     </section>
   );
 }
@@ -118,6 +132,17 @@ export default function WeddingInvitation() {
   const [sky, setSky] = useState<SkyPhase>("dawn");
   const [activePage, setActivePage] = useState("intro");
   const scrollerRef = useRef<HTMLElement | null>(null);
+
+  const goToNextPage = () => {
+    const root = scrollerRef.current;
+    if (!root) return;
+    const pages = Array.from(root.querySelectorAll<HTMLElement>("[data-page]"));
+    const index = pages.findIndex(
+      (page) => page.getAttribute("data-page") === activePage,
+    );
+    const next = pages[index < 0 ? 0 : index + 1];
+    next?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   useEffect(() => {
     if (!opened) return;
@@ -140,12 +165,98 @@ export default function WeddingInvitation() {
       },
       {
         root,
-        threshold: [0.35, 0.55, 0.7],
+        threshold: [0.2, 0.4, 0.55],
       },
     );
 
     pages.forEach((page) => observer.observe(page));
     return () => observer.disconnect();
+  }, [opened]);
+
+  // Higher scroll sensitivity: small wheel/swipe jumps to the next page.
+  useEffect(() => {
+    if (!opened) return;
+    const root = scrollerRef.current;
+    if (!root) return;
+
+    const getPages = () =>
+      Array.from(root.querySelectorAll<HTMLElement>("[data-page]"));
+
+    const currentIndex = () => {
+      const pages = getPages();
+      const mid = root.scrollTop + root.clientHeight * 0.35;
+      let best = 0;
+      let bestDist = Infinity;
+      pages.forEach((page, index) => {
+        const dist = Math.abs(page.offsetTop - mid + page.offsetHeight * 0.2);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = index;
+        }
+      });
+      return best;
+    };
+
+    let locked = false;
+    let wheelDelta = 0;
+    let touchStartY = 0;
+
+    const goTo = (index: number) => {
+      const pages = getPages();
+      const target = pages[Math.max(0, Math.min(pages.length - 1, index))];
+      if (!target || locked) return;
+      locked = true;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.setTimeout(() => {
+        locked = false;
+        wheelDelta = 0;
+      }, 420);
+    };
+
+    const isFormTarget = (target: EventTarget | null) => {
+      if (!(target instanceof Element)) return false;
+      return Boolean(
+        target.closest(
+          "input, textarea, select, button, a, label, [data-page='rsvp'] form",
+        ),
+      );
+    };
+
+    const onWheel = (event: WheelEvent) => {
+      if (isFormTarget(event.target)) return;
+      if (Math.abs(event.deltaY) < 2) return;
+      event.preventDefault();
+      wheelDelta += event.deltaY;
+      if (wheelDelta > 28) goTo(currentIndex() + 1);
+      else if (wheelDelta < -28) goTo(currentIndex() - 1);
+    };
+
+    const onTouchStart = (event: TouchEvent) => {
+      if (isFormTarget(event.target)) {
+        touchStartY = 0;
+        return;
+      }
+      touchStartY = event.touches[0]?.clientY ?? 0;
+    };
+
+    const onTouchEnd = (event: TouchEvent) => {
+      if (!touchStartY || isFormTarget(event.target)) return;
+      const endY = event.changedTouches[0]?.clientY ?? touchStartY;
+      const delta = touchStartY - endY;
+      if (Math.abs(delta) < 28) return;
+      if (delta > 0) goTo(currentIndex() + 1);
+      else goTo(currentIndex() - 1);
+    };
+
+    root.addEventListener("wheel", onWheel, { passive: false });
+    root.addEventListener("touchstart", onTouchStart, { passive: true });
+    root.addEventListener("touchend", onTouchEnd, { passive: true });
+
+    return () => {
+      root.removeEventListener("wheel", onWheel);
+      root.removeEventListener("touchstart", onTouchStart);
+      root.removeEventListener("touchend", onTouchEnd);
+    };
   }, [opened]);
 
   const tone = skyTextTone(sky);
@@ -239,11 +350,15 @@ export default function WeddingInvitation() {
               <Countdown />
             </div>
           </div>
-          <ScrollHint light />
+          <ScrollHint light onClick={goToNextPage} />
         </section>
 
         {ceremonies.map((ceremony) => (
-          <CeremonyPage key={ceremony.id} ceremony={ceremony} />
+          <CeremonyPage
+            key={ceremony.id}
+            ceremony={ceremony}
+            onNext={goToNextPage}
+          />
         ))}
 
         <section
@@ -260,23 +375,20 @@ export default function WeddingInvitation() {
             </h2>
             <p className="mt-0.5 text-sm text-ink/60 sm:mt-2">स्थान</p>
 
-            <figure className="relative mx-auto mt-3 h-36 w-full max-w-xs overflow-hidden sm:mt-8 sm:h-auto sm:aspect-[16/10] sm:max-w-xl">
+            <figure className="relative mx-auto mt-3 w-full max-w-[14rem] sm:mt-8 sm:max-w-md">
               <Image
                 src={wedding.venueImage}
                 alt={wedding.venueName}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 640px"
+                width={720}
+                height={900}
+                className="h-auto w-full"
+                sizes="(max-width: 768px) 56vw, 448px"
               />
             </figure>
 
-            <h3 className="display mt-3 text-xl text-ink sm:mt-8 sm:text-4xl">
-              {wedding.venueName}
+            <h3 className="display mt-3 text-lg leading-snug text-ink sm:mt-6 sm:text-3xl">
+              {wedding.venueName}, {wedding.venueAddress}
             </h3>
-            <p className="mt-0.5 text-sm text-ink/65">{wedding.venueAddress}</p>
-            <p className="mt-2 max-w-md px-1 text-xs leading-relaxed text-ink/70 sm:mt-3 sm:text-sm">
-              All ceremonies unfold here — from noon colours to midnight vows.
-            </p>
             <a
               href={wedding.mapsUrl}
               target="_blank"
@@ -287,7 +399,7 @@ export default function WeddingInvitation() {
               Open in Google Maps
             </a>
           </div>
-          <ScrollHint />
+          <ScrollHint onClick={goToNextPage} />
         </section>
 
         <section
