@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Diksha & Shantanu — Wedding Invitation
 
-## Getting Started
+A frontend-only Next.js wedding invitation for **Diksha & Shantanu** (22 November 2026, Roorkee, Uttarakhand).
 
-First, run the development server:
+Inspired by invitation experiences like [Chhaya & Ankit](https://chhaya-weds-ankit.vercel.app/v2).
+
+## Features
+
+- Seal screen → full invitation reveal
+- Background music with a clickable playlist
+- Couple photos, countdown, venue directions
+- Multi-step RSVP that writes to your Google Sheet (via Apps Script)
+
+## Run locally
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Connect RSVP to Google Sheets
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The sheet you shared:
 
-## Learn More
+https://docs.google.com/spreadsheets/d/1oPvghB__FEtzq_E935PuHnLgfxoHlPsVyxBFAQMxlug/edit
 
-To learn more about Next.js, take a look at the following resources:
+1. Open the sheet → **Extensions → Apps Script**
+2. Paste the contents of `google-apps-script/Code.gs`
+3. **Deploy → New deployment → Web app**
+   - Execute as: **Me**
+   - Who has access: **Anyone**
+4. Copy the web app URL into `.env.local`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+NEXT_PUBLIC_GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/XXXX/exec
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+5. Restart `npm run dev`
 
-## Deploy on Vercel
+RSVP columns written: Timestamp, Name, Phone, Attending, Guests, Message, Submitted At (ISO).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Assets
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Photos: `public/photos/` (web-optimized copies in `public/photos/web/`)
+- Music: `public/music/`
+
+## Deploy
+
+Any static-friendly Next host works (Vercel recommended). Set `NEXT_PUBLIC_GOOGLE_SCRIPT_URL` in the host environment variables.
