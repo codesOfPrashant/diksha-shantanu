@@ -251,16 +251,8 @@ select {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 0.25rem;
-  z-index: 20;
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 @media (min-width: 768px) {
@@ -289,11 +281,12 @@ select {
   position: fixed;
   z-index: 40;
   left: 50%;
-  top: max(0.65rem, calc(var(--safe-top) + 0.4rem));
+  top: max(0.45rem, calc(var(--safe-top) + 0.25rem));
   transform: translateX(-50%);
   display: flex;
-  gap: 0.35rem;
-  padding: 0.4rem 0.55rem;
+  align-items: center;
+  gap: 0;
+  padding: 0.15rem 0.35rem;
   border-radius: 999px;
   background: rgba(250, 247, 241, 0.28);
   backdrop-filter: blur(10px);

@@ -27,45 +27,32 @@ const pageOrder = [
 ] as const;
 
 const pageSky: Record<(typeof pageOrder)[number], SkyPhase> = {
-  intro: "dusk",
+  intro: "dawn",
   haldi: "noon",
   mehendi: "afternoon",
   sangeet: "sunset",
-  wedding: "dusk",
-  "jai-mala": "midnight",
+  wedding: "sunset",
+  "jai-mala": "evening",
   phere: "midnight",
-  venue: "soft",
-  rsvp: "soft",
+  venue: "after",
+  rsvp: "after",
 };
 
-function ScrollHint({
-  light,
-  onClick,
-}: {
-  light?: boolean;
-  onClick?: () => void;
-}) {
+function ScrollHint({ light }: { light?: boolean }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
+    <div
       className={`scroll-hint ${light ? "text-paper/70" : "text-ink/45"}`}
-      aria-label="Go to next page"
+      aria-hidden
     >
       <span className="scroll-chevron text-xl leading-none">↓</span>
-    </button>
+    </div>
   );
 }
 
-function CeremonyPage({
-  ceremony,
-  onNext,
-}: {
-  ceremony: Ceremony;
-  onNext?: () => void;
-}) {
+function CeremonyPage({ ceremony }: { ceremony: Ceremony }) {
   const isNight =
     ceremony.sky === "midnight" ||
+    ceremony.sky === "evening" ||
     ceremony.sky === "dusk" ||
     ceremony.sky === "sunset";
 
@@ -122,7 +109,7 @@ function CeremonyPage({
           under the stars and moon
         </p>
       )}
-      <ScrollHint light={isNight} onClick={onNext} />
+      <ScrollHint light={isNight} />
     </section>
   );
 }
@@ -132,16 +119,22 @@ export default function WeddingInvitation() {
   const [sky, setSky] = useState<SkyPhase>("dawn");
   const [activePage, setActivePage] = useState("intro");
   const scrollerRef = useRef<HTMLElement | null>(null);
+  const scrollLockRef = useRef(false);
 
-  const goToNextPage = () => {
+  const goToPage = (id: string) => {
     const root = scrollerRef.current;
     if (!root) return;
-    const pages = Array.from(root.querySelectorAll<HTMLElement>("[data-page]"));
-    const index = pages.findIndex(
-      (page) => page.getAttribute("data-page") === activePage,
-    );
-    const next = pages[index < 0 ? 0 : index + 1];
-    next?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const target = root.querySelector<HTMLElement>(`[data-page="${id}"]`);
+    if (!target) return;
+
+    scrollLockRef.current = true;
+    setActivePage(id);
+    setSky(pageSky[id as keyof typeof pageSky] ?? "after");
+    // scrollTo on the story scroller (not scrollIntoView) — reliable with snap.
+    root.scrollTo({ top: target.offsetTop, behavior: "smooth" });
+    window.setTimeout(() => {
+      scrollLockRef.current = false;
+    }, 700);
   };
 
   useEffect(() => {
@@ -153,6 +146,7 @@ export default function WeddingInvitation() {
     const pages = Array.from(root.querySelectorAll<HTMLElement>("[data-page]"));
     const observer = new IntersectionObserver(
       (entries) => {
+        if (scrollLockRef.current) return;
         const visible = entries
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
@@ -161,7 +155,7 @@ export default function WeddingInvitation() {
         const page = visible.target.getAttribute("data-page");
         if (!page) return;
         setActivePage(page);
-        setSky(pageSky[page as keyof typeof pageSky] ?? "soft");
+        setSky(pageSky[page as keyof typeof pageSky] ?? "after");
       },
       {
         root,
@@ -197,20 +191,17 @@ export default function WeddingInvitation() {
       return best;
     };
 
-    let locked = false;
     let wheelDelta = 0;
     let touchStartY = 0;
 
-    const goTo = (index: number) => {
+    const goToIndex = (index: number) => {
+      if (scrollLockRef.current) return;
       const pages = getPages();
       const target = pages[Math.max(0, Math.min(pages.length - 1, index))];
-      if (!target || locked) return;
-      locked = true;
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-      window.setTimeout(() => {
-        locked = false;
-        wheelDelta = 0;
-      }, 420);
+      const id = target?.getAttribute("data-page");
+      if (!id) return;
+      wheelDelta = 0;
+      goToPage(id);
     };
 
     const isFormTarget = (target: EventTarget | null) => {
@@ -227,8 +218,8 @@ export default function WeddingInvitation() {
       if (Math.abs(event.deltaY) < 2) return;
       event.preventDefault();
       wheelDelta += event.deltaY;
-      if (wheelDelta > 28) goTo(currentIndex() + 1);
-      else if (wheelDelta < -28) goTo(currentIndex() - 1);
+      if (wheelDelta > 28) goToIndex(currentIndex() + 1);
+      else if (wheelDelta < -28) goToIndex(currentIndex() - 1);
     };
 
     const onTouchStart = (event: TouchEvent) => {
@@ -244,8 +235,8 @@ export default function WeddingInvitation() {
       const endY = event.changedTouches[0]?.clientY ?? touchStartY;
       const delta = touchStartY - endY;
       if (Math.abs(delta) < 28) return;
-      if (delta > 0) goTo(currentIndex() + 1);
-      else goTo(currentIndex() - 1);
+      if (delta > 0) goToIndex(currentIndex() + 1);
+      else goToIndex(currentIndex() - 1);
     };
 
     root.addEventListener("wheel", onWheel, { passive: false });
@@ -281,21 +272,21 @@ export default function WeddingInvitation() {
             type="button"
             aria-label={`Go to ${id}`}
             aria-current={activePage === id}
-            onClick={() => {
-              scrollerRef.current
-                ?.querySelector(`[data-page="${id}"]`)
-                ?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}
-            className={`h-1.5 w-1.5 rounded-full transition-all sm:h-2 sm:w-2 ${
-              activePage === id
-                ? light
-                  ? "scale-125 bg-paper"
-                  : "scale-125 bg-ink"
-                : light
-                  ? "bg-paper/35"
-                  : "bg-ink/25"
-            }`}
-          />
+            onClick={() => goToPage(id)}
+            className="grid h-7 w-7 place-items-center sm:h-6 sm:w-6"
+          >
+            <span
+              className={`block h-1.5 w-1.5 rounded-full transition-all sm:h-2 sm:w-2 ${
+                activePage === id
+                  ? light
+                    ? "scale-125 bg-paper"
+                    : "scale-125 bg-ink"
+                  : light
+                    ? "bg-paper/35"
+                    : "bg-ink/25"
+              }`}
+            />
+          </button>
         ))}
       </div>
 
@@ -350,15 +341,11 @@ export default function WeddingInvitation() {
               <Countdown />
             </div>
           </div>
-          <ScrollHint light onClick={goToNextPage} />
+          <ScrollHint light />
         </section>
 
         {ceremonies.map((ceremony) => (
-          <CeremonyPage
-            key={ceremony.id}
-            ceremony={ceremony}
-            onNext={goToNextPage}
-          />
+          <CeremonyPage key={ceremony.id} ceremony={ceremony} />
         ))}
 
         <section
@@ -366,16 +353,16 @@ export default function WeddingInvitation() {
           id="venue"
           className="story-page relative items-center text-center"
         >
-          <div className="mx-auto flex w-full max-w-lg flex-col items-center">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-ink/50 sm:text-xs sm:tracking-[0.22em]">
+          <div className="mx-auto flex w-full max-w-lg flex-col items-center text-paper">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-paper/60 sm:text-xs sm:tracking-[0.22em]">
               Travel & stay
             </p>
-            <h2 className="display mt-1.5 text-[1.75rem] leading-tight text-ink sm:mt-3 sm:text-6xl">
+            <h2 className="display mt-1.5 text-[1.75rem] leading-tight text-paper sm:mt-3 sm:text-6xl">
               Where to find us
             </h2>
-            <p className="mt-0.5 text-sm text-ink/60 sm:mt-2">स्थान</p>
+            <p className="mt-0.5 text-sm text-paper/70 sm:mt-2">स्थान</p>
 
-            <figure className="relative mx-auto mt-3 w-full max-w-[14rem] sm:mt-8 sm:max-w-md">
+            <figure className="relative mx-auto mt-3 w-full max-w-[14rem] overflow-hidden rounded-sm sm:mt-8 sm:max-w-md">
               <Image
                 src={wedding.venueImage}
                 alt={wedding.venueName}
@@ -386,7 +373,7 @@ export default function WeddingInvitation() {
               />
             </figure>
 
-            <h3 className="display mt-3 text-lg leading-snug text-ink sm:mt-6 sm:text-3xl">
+            <h3 className="display mt-3 text-lg leading-snug text-paper sm:mt-6 sm:text-3xl">
               {wedding.venueName}, {wedding.venueAddress}
             </h3>
             <a
@@ -394,12 +381,12 @@ export default function WeddingInvitation() {
               target="_blank"
               rel="noreferrer"
               className="mt-4 inline-flex min-h-11 w-full max-w-xs items-center justify-center rounded-full px-6 py-3 text-xs uppercase tracking-[0.16em] transition active:scale-[0.98] sm:mt-8 sm:min-h-12 sm:w-auto sm:text-sm sm:tracking-[0.18em]"
-              style={{ backgroundColor: "#1f2420", color: "#faf7f1" }}
+              style={{ backgroundColor: "#faf7f1", color: "#1f2420" }}
             >
               Open in Google Maps
             </a>
           </div>
-          <ScrollHint onClick={goToNextPage} />
+          <ScrollHint light />
         </section>
 
         <section
@@ -407,7 +394,7 @@ export default function WeddingInvitation() {
           id="rsvp"
           className="story-page story-page--form relative"
         >
-          <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center">
+          <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center rounded-2xl bg-[rgba(250,247,241,0.92)] px-4 py-6 shadow-[0_16px_50px_rgba(0,0,0,0.28)] backdrop-blur-md sm:px-6">
             <div className="mb-4 text-center sm:mb-6">
               <p className="text-[10px] uppercase tracking-[0.2em] text-ink/50 sm:text-xs sm:tracking-[0.22em]">
                 Kindly respond

@@ -22,8 +22,9 @@ export type SkyPhase =
   | "afternoon"
   | "sunset"
   | "dusk"
+  | "evening"
   | "midnight"
-  | "soft";
+  | "after";
 
 export type Ceremony = {
   id: string;
@@ -65,7 +66,7 @@ export const ceremonies: Ceremony[] = [
   {
     id: "sangeet",
     day: "21 November",
-    time: "5:00 PM onwards",
+    time: "6:00 PM onwards",
     title: "Sangeet",
     titleHi: "संगीत",
     description:
@@ -80,8 +81,8 @@ export const ceremonies: Ceremony[] = [
     title: "Wedding Reception",
     titleHi: "रिसेप्शन",
     description:
-      "Dusk gathers as we welcome you to celebrate Diksha and Shantanu.",
-    sky: "dusk",
+      "As the sun hangs low, we welcome you to celebrate Diksha and Shantanu.",
+    sky: "sunset",
     accent: "#7a6aa8",
   },
   {
@@ -92,7 +93,7 @@ export const ceremonies: Ceremony[] = [
     titleHi: "जय माला",
     description:
       "Garlands are exchanged as the night deepens and the couple is welcomed as one.",
-    sky: "midnight",
+    sky: "evening",
     accent: "#e8b4c8",
   },
   {
