@@ -304,15 +304,26 @@ export default function WeddingInvitation() {
           className="story-page relative items-center text-center"
         >
           <div className="pointer-events-none absolute inset-0">
-            <Image
-              src="/photos/web/couple-2.png"
-              alt=""
-              fill
-              priority
-              className="object-cover object-center"
-              sizes="100vw"
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,20,18,0.35)_0%,rgba(18,20,18,0.28)_40%,rgba(18,20,18,0.78)_100%)]" />
+            <div className="photo-blur-fill absolute inset-0 max-md:hidden" aria-hidden>
+              <Image
+                src="/photos/web/couple-2.png"
+                alt=""
+                fill
+                className="photo-blur-fill__img"
+                sizes="100vw"
+              />
+            </div>
+            <div className="photo-stage absolute inset-0 overflow-hidden">
+              <Image
+                src="/photos/web/couple-2.png"
+                alt=""
+                fill
+                priority
+                className="photo-stage__media"
+                sizes="(max-width: 768px) 100vw, 576px"
+              />
+            </div>
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,20,18,0.35)_0%,rgba(18,20,18,0.28)_40%,rgba(18,20,18,0.78)_100%)] md:bg-[linear-gradient(180deg,rgba(18,20,18,0.32)_0%,rgba(18,20,18,0.18)_42%,rgba(18,20,18,0.72)_100%)]" />
           </div>
           <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center px-1 text-paper">
             <p className="script text-3xl sm:text-4xl" aria-label={wedding.coupleShort}>
@@ -346,36 +357,36 @@ export default function WeddingInvitation() {
         <section
           data-page="venue"
           id="venue"
-          className="story-page relative items-center text-center"
+          className="story-page story-page--venue relative items-center text-center"
         >
-          <div className="mx-auto flex w-full max-w-lg flex-col items-center text-paper">
+          <div className="venue-page mx-auto flex w-full max-w-lg flex-col items-center pb-4 text-paper">
             <p className="text-[10px] uppercase tracking-[0.2em] text-paper/60 sm:text-xs sm:tracking-[0.22em]">
               Travel & stay
             </p>
-            <h2 className="display mt-1.5 text-[1.75rem] leading-tight text-paper sm:mt-3 sm:text-6xl">
+            <h2 className="display mt-1.5 text-[1.75rem] leading-tight text-paper sm:mt-2 md:text-4xl lg:text-5xl">
               Where to find us
             </h2>
-            <p className="mt-0.5 text-sm text-paper/70 sm:mt-2">स्थान</p>
+            <p className="mt-0.5 text-sm text-paper/70">स्थान</p>
 
-            <figure className="relative mx-auto mt-3 w-full max-w-[14rem] overflow-hidden rounded-sm sm:mt-8 sm:max-w-md">
+            <figure className="venue-page__figure relative mx-auto mt-3 w-full max-w-[14rem] sm:mt-5 sm:max-w-[11rem] md:mt-4 md:max-w-[13rem] lg:max-w-[15rem]">
               <Image
                 src={wedding.venueImage}
                 alt={wedding.venueName}
                 width={720}
                 height={900}
-                className="h-auto w-full"
-                sizes="(max-width: 768px) 56vw, 448px"
+                className="venue-page__img h-auto w-full"
+                sizes="(max-width: 768px) 56vw, 240px"
               />
             </figure>
 
-            <h3 className="display mt-3 text-lg leading-snug text-paper sm:mt-6 sm:text-3xl">
+            <h3 className="display mt-3 text-lg leading-snug text-paper md:mt-4 md:text-2xl">
               {wedding.venueName}, {wedding.venueAddress}
             </h3>
             <a
               href={wedding.mapsUrl}
               target="_blank"
               rel="noreferrer"
-              className="mt-4 inline-flex min-h-11 w-full max-w-xs items-center justify-center rounded-full px-6 py-3 text-xs uppercase tracking-[0.16em] transition active:scale-[0.98] sm:mt-8 sm:min-h-12 sm:w-auto sm:text-sm sm:tracking-[0.18em]"
+              className="mt-4 inline-flex min-h-11 w-full max-w-xs items-center justify-center rounded-full px-6 py-3 text-xs uppercase tracking-[0.16em] transition active:scale-[0.98] md:mt-5 sm:min-h-12 sm:w-auto sm:text-sm sm:tracking-[0.18em]"
               style={{ backgroundColor: "#faf7f1", color: "#1f2420" }}
             >
               Open in Google Maps
@@ -389,15 +400,15 @@ export default function WeddingInvitation() {
           id="rsvp"
           className="story-page story-page--form relative"
         >
-          <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center rounded-2xl bg-[rgba(250,247,241,0.92)] px-4 py-6 shadow-[0_16px_50px_rgba(0,0,0,0.28)] backdrop-blur-md sm:px-6">
-            <div className="mb-4 text-center sm:mb-6">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-ink/50 sm:text-xs sm:tracking-[0.22em]">
+          <div className="rsvp-card mx-auto w-full max-w-[19rem] rounded-xl bg-[rgba(250,247,241,0.92)] px-3.5 py-4 shadow-[0_12px_40px_rgba(0,0,0,0.24)] backdrop-blur-md sm:max-w-[21rem] sm:px-4 sm:py-5 md:max-w-[22rem]">
+            <div className="mb-3 text-center sm:mb-4">
+              <p className="text-[9px] uppercase tracking-[0.18em] text-ink/50 sm:text-[10px]">
                 Kindly respond
               </p>
-              <h2 className="display mt-1.5 text-3xl text-ink sm:mt-2 sm:text-5xl">
+              <h2 className="display mt-1 text-2xl text-ink sm:text-3xl">
                 RSVP
               </h2>
-              <p className="mt-1 text-sm text-ink/60">
+              <p className="mt-0.5 text-xs text-ink/60">
                 आपकी उपस्थिति की पुष्टि करें
               </p>
             </div>

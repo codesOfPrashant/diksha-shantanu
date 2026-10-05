@@ -41,13 +41,13 @@ async function submitRsvp(payload: RsvpPayload) {
 }
 
 const fieldClass =
-  "w-full rounded-xl border border-ink/12 bg-white/80 px-4 py-3 text-base outline-none ring-blush/30 transition focus:ring-2";
+  "w-full rounded-lg border border-ink/12 bg-white/80 px-3 py-2.5 text-base outline-none ring-blush/30 transition focus:ring-2";
 
 const btnPrimary =
-  "min-h-11 flex-1 rounded-full bg-ink px-5 py-3 text-xs uppercase tracking-[0.14em] text-paper transition active:scale-[0.98] hover:bg-blush-deep disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-12 sm:text-sm sm:tracking-[0.18em]";
+  "min-h-9 flex-1 rounded-full bg-ink px-4 py-2 text-[10px] uppercase tracking-[0.12em] text-paper transition active:scale-[0.98] hover:bg-blush-deep disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-10 sm:text-[11px] sm:tracking-[0.14em]";
 
 const btnGhost =
-  "min-h-11 flex-1 rounded-full border border-ink/15 px-5 py-3 text-xs uppercase tracking-[0.14em] transition active:scale-[0.98] sm:min-h-12 sm:text-sm sm:tracking-[0.18em]";
+  "min-h-9 flex-1 rounded-full border border-ink/15 px-4 py-2 text-[10px] uppercase tracking-[0.12em] transition active:scale-[0.98] sm:min-h-10 sm:text-[11px] sm:tracking-[0.14em]";
 
 export default function RSVPForm() {
   const [step, setStep] = useState(1);
@@ -99,16 +99,16 @@ export default function RSVPForm() {
 
   if (status === "success") {
     return (
-      <div className="fade-up mx-auto max-w-lg text-center">
-        <p className="script text-3xl text-blush-deep sm:text-4xl">Thank you</p>
-        <h3 className="display mt-3 text-2xl text-ink sm:text-4xl">धन्यवाद</h3>
-        <p className="mt-4 text-sm text-ink-soft sm:text-base">
+      <div className="fade-up text-center">
+        <p className="script text-2xl text-blush-deep sm:text-3xl">Thank you</p>
+        <h3 className="display mt-2 text-xl text-ink sm:text-2xl">धन्यवाद</h3>
+        <p className="mt-3 text-xs text-ink-soft sm:text-sm">
           Your response has been noted. We cannot wait to celebrate with you.
         </p>
         <button
           type="button"
           onClick={reset}
-          className="mt-8 min-h-11 text-xs uppercase tracking-[0.16em] text-sage underline-offset-4 hover:underline sm:text-sm sm:tracking-[0.18em]"
+          className="mt-5 min-h-9 text-[10px] uppercase tracking-[0.14em] text-sage underline-offset-4 hover:underline sm:text-xs"
         >
           Amend response
         </button>
@@ -117,18 +117,18 @@ export default function RSVPForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mx-auto max-w-lg">
-      <p className="text-[10px] uppercase tracking-[0.2em] text-ink-soft/70 sm:text-xs sm:tracking-[0.22em]">
+    <form onSubmit={onSubmit} className="mx-auto w-full">
+      <p className="text-[9px] uppercase tracking-[0.16em] text-ink-soft/70 sm:text-[10px]">
         Step {step} of 3
       </p>
 
       {step === 1 && (
-        <div className="fade-up mt-2 space-y-3 sm:mt-4 sm:space-y-5">
-          <h3 className="display text-xl text-ink sm:text-4xl">
+        <div className="fade-up mt-1.5 space-y-2.5 sm:space-y-3">
+          <h3 className="display text-lg leading-snug text-ink sm:text-xl">
             Your name and number
           </h3>
           <label className="block">
-            <span className="mb-1.5 block text-sm text-ink-soft">Full name</span>
+            <span className="mb-1 block text-xs text-ink-soft">Full name</span>
             <input
               required
               value={name}
@@ -139,7 +139,7 @@ export default function RSVPForm() {
             />
           </label>
           <label className="block">
-            <span className="mb-1.5 block text-sm text-ink-soft">Phone</span>
+            <span className="mb-1 block text-xs text-ink-soft">Phone</span>
             <input
               required
               value={phone}
@@ -151,8 +151,8 @@ export default function RSVPForm() {
             />
           </label>
           <fieldset>
-            <legend className="mb-2 text-sm text-ink-soft">Can you come?</legend>
-            <div className="grid grid-cols-1 gap-2.5 sm:gap-3">
+            <legend className="mb-1.5 text-xs text-ink-soft">Can you come?</legend>
+            <div className="grid grid-cols-1 gap-2">
               {[
                 { value: "yes" as const, label: "Yes, I'll be there" },
                 { value: "no" as const, label: "Sorry, I can't" },
@@ -161,7 +161,7 @@ export default function RSVPForm() {
                   key={option.value}
                   type="button"
                   onClick={() => setAttending(option.value)}
-                  className={`min-h-11 rounded-xl border px-4 py-3 text-left text-sm transition active:scale-[0.99] sm:min-h-12 sm:py-3.5 ${
+                  className={`min-h-9 rounded-lg border px-3 py-2 text-left text-xs transition active:scale-[0.99] sm:min-h-10 sm:text-sm ${
                     attending === option.value
                       ? "border-blush-deep bg-blush/12 text-blush-deep"
                       : "border-ink/12 bg-white/70"
@@ -184,30 +184,30 @@ export default function RSVPForm() {
       )}
 
       {step === 2 && (
-        <div className="fade-up mt-3 space-y-6 sm:mt-4">
-          <h3 className="display text-2xl text-ink sm:text-4xl">
+        <div className="fade-up mt-2 space-y-4">
+          <h3 className="display text-lg leading-snug text-ink sm:text-xl">
             How many of you, {name.split(" ")[0] || "friend"}?
           </h3>
-          <div className="flex items-center justify-center gap-8">
+          <div className="flex items-center justify-center gap-5">
             <button
               type="button"
               onClick={() => setGuests((value) => Math.max(1, value - 1))}
-              className="grid h-14 w-14 place-items-center rounded-full border border-ink/15 text-2xl active:scale-95"
+              className="grid h-10 w-10 place-items-center rounded-full border border-ink/15 text-lg active:scale-95 sm:h-11 sm:w-11"
               aria-label="Decrease guests"
             >
               −
             </button>
-            <span className="display text-5xl text-ink sm:text-6xl">{guests}</span>
+            <span className="display text-4xl text-ink sm:text-5xl">{guests}</span>
             <button
               type="button"
               onClick={() => setGuests((value) => Math.min(20, value + 1))}
-              className="grid h-14 w-14 place-items-center rounded-full border border-ink/15 text-2xl active:scale-95"
+              className="grid h-10 w-10 place-items-center rounded-full border border-ink/15 text-lg active:scale-95 sm:h-11 sm:w-11"
               aria-label="Increase guests"
             >
               +
             </button>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <button type="button" onClick={() => setStep(1)} className={btnGhost}>
               Back
             </button>
@@ -219,24 +219,24 @@ export default function RSVPForm() {
       )}
 
       {step === 3 && (
-        <div className="fade-up mt-3 space-y-4 sm:mt-4 sm:space-y-5">
-          <h3 className="display text-2xl text-ink sm:text-4xl">
+        <div className="fade-up mt-2 space-y-3">
+          <h3 className="display text-lg leading-snug text-ink sm:text-xl">
             Anything for the couple?
           </h3>
           <label className="block">
-            <span className="mb-2 block text-sm text-ink-soft">
+            <span className="mb-1 block text-xs text-ink-soft">
               A note (optional)
             </span>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              rows={3}
+              rows={2}
               className={`${fieldClass} resize-none`}
               placeholder="Wishes, travel plans, or a little memory..."
             />
           </label>
-          {error && <p className="text-sm text-blush-deep">{error}</p>}
-          <div className="flex gap-3">
+          {error && <p className="text-xs text-blush-deep">{error}</p>}
+          <div className="flex gap-2">
             <button
               type="button"
               onClick={() => setStep(attending === "no" ? 1 : 2)}

@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { wedding } from "@/lib/config";
 
 type InviteGateProps = {
@@ -10,7 +11,16 @@ export default function InviteGate({ onOpen }: InviteGateProps) {
   return (
     <section className="relative flex min-h-[100dvh] min-h-[100svh] items-center justify-center overflow-hidden px-5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-[max(2.5rem,env(safe-area-inset-top))]">
       <div
-        className="absolute inset-0 bg-cover bg-center"
+        className="gate-photo-stack absolute inset-0 max-md:hidden"
+        style={
+          {
+            "--gate-photo": "url('/photos/web/couple-1.jpeg')",
+          } as CSSProperties
+        }
+        aria-hidden
+      />
+      <div
+        className="gate-photo-layer absolute inset-0"
         style={{ backgroundImage: "url('/photos/web/couple-1.jpeg')" }}
         aria-hidden
       />

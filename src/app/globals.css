@@ -163,6 +163,112 @@ select {
   animation: kenBurns 22s ease-in-out infinite alternate;
 }
 
+/* Portrait couple photos: full bleed on phone; laptop = sharp center + blurred sides */
+.photo-blur-fill {
+  overflow: hidden;
+  background: linear-gradient(
+    165deg,
+    #f3ebe0 0%,
+    #e8ddd0 38%,
+    #ddd2c4 100%
+  );
+}
+
+.photo-blur-fill__img {
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.14);
+  filter: blur(36px) saturate(1.12);
+}
+
+@media (min-width: 768px) {
+  .photo-blur-fill__img {
+    filter: blur(44px) saturate(1.15);
+  }
+}
+
+.photo-stage {
+  background: transparent;
+  z-index: 1;
+}
+
+@media (min-width: 768px) {
+  /* Full viewport height; width from portrait aspect — sides show blur fill */
+  .photo-stage {
+    top: 0;
+    right: auto;
+    bottom: 0;
+    left: 50%;
+    width: min(100%, calc(100svh * 1023 / 1537));
+    height: 100%;
+    transform: translateX(-50%);
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .photo-stage--gate {
+    width: min(100%, calc(100svh * 900 / 1600));
+  }
+}
+
+.photo-stage__media {
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (min-width: 768px) {
+  .photo-stage__media {
+    object-fit: contain;
+    object-position: center;
+  }
+}
+
+.gate-photo-stack {
+  --gate-photo: none;
+  overflow: hidden;
+  background: linear-gradient(
+    165deg,
+    #f3ebe0 0%,
+    #e8ddd0 38%,
+    #ddd2c4 100%
+  );
+}
+
+.gate-photo-stack::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  background-image: var(--gate-photo);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: blur(40px) saturate(1.14);
+  transform: scale(1.08);
+}
+
+.gate-photo-layer {
+  z-index: 1;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@media (min-width: 768px) {
+  .gate-photo-layer {
+    top: 0;
+    right: auto;
+    bottom: 0;
+    left: 50%;
+    width: min(100%, calc(100svh * 900 / 1600));
+    height: 100%;
+    transform: translateX(-50%);
+    background-size: auto 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
 .gate-cta {
   animation: softPulse 2.8s ease-in-out infinite;
 }
@@ -233,13 +339,61 @@ select {
   padding-top: max(2rem, calc(var(--safe-top) + 1.5rem));
 }
 
+@media (min-width: 768px) {
+  .story-page.story-page--tall {
+    height: auto;
+    min-height: 100svh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.story-page--venue {
+  min-height: 100svh;
+  height: auto;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .story-page.story-page--venue {
+    height: auto;
+    min-height: 100svh;
+    justify-content: center;
+  }
+}
+
+.venue-page__figure {
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .venue-page__img {
+    max-height: min(36svh, 320px);
+    width: auto;
+    max-width: 100%;
+    margin-inline: auto;
+    object-fit: contain;
+  }
+}
+
 .story-page--form {
-  height: 100dvh;
-  height: 100svh;
+  height: auto;
   min-height: 100dvh;
   min-height: 100svh;
   justify-content: center;
   overflow-y: auto;
+  padding-top: max(1.75rem, calc(var(--safe-top) + 1rem));
+  padding-bottom: max(1.75rem, calc(var(--music-clearance) + 0.75rem));
+}
+
+@media (min-width: 768px) {
+  .story-page.story-page--form {
+    height: auto;
+    min-height: 100svh;
+    padding-top: max(2.5rem, calc(var(--safe-top) + 1.25rem));
+    padding-bottom: max(2.5rem, calc(var(--music-clearance) + 1rem));
+  }
 }
 
 .story-page--end {
