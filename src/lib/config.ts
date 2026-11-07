@@ -95,7 +95,7 @@ export const ceremonies: Ceremony[] = [
   {
     id: "mehendi",
     day: "21 November",
-    time: "4:00 PM",
+    time: "3:00 PM",
     title: "Mehendi",
     titleHi: "मेहंदी",
     description:
@@ -107,7 +107,7 @@ export const ceremonies: Ceremony[] = [
   {
     id: "sangeet",
     day: "21 November",
-    time: "6:00 PM onwards",
+    time: "7:00 PM onwards",
     title: "Sangeet",
     titleHi: "संगीत",
     description:
@@ -118,7 +118,7 @@ export const ceremonies: Ceremony[] = [
   {
     id: "wedding",
     day: "22 November",
-    time: "5:00 PM onwards",
+    time: "7:30 PM onwards",
     title: "Wedding Celebration",
     titleHi: "विवाह उत्सव",
     description:
